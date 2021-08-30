@@ -5,6 +5,7 @@ import MainImage from '../LandingPage/Sections/MainImage';
 import MovieInfo from './Sections/MovieInfo';
 import {Row} from 'antd';
 import GridCards from '../commons/GridCard';
+import Favorite from './Sections/Favorite';
 
 function MovieDetail(props) {
     let movieId = props.match.params.movieId
@@ -34,7 +35,7 @@ function MovieDetail(props) {
         fetch(endpointCrew)
         .then(response => response.json())
        .then(response => {
-           console.log(response)
+        //    console.log(response)
            setCasts(response.cast);
        })
     }, [])
@@ -52,6 +53,8 @@ function MovieDetail(props) {
 
             
             {/* Body */}
+            <Favorite movieInfo={Movie} movieId={movieId} userFrom={localStorage.getItem('userId')}></Favorite>
+
             <MovieInfo
              movie={Movie}
             />

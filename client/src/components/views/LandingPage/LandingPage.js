@@ -4,6 +4,7 @@ import {API_URL, API_KEY, IMAGE_BASE_URL} from '../../Config';
 import MainImage from './Sections/MainImage';
 import GridCards from '../commons/GridCard';
 import {Row} from 'antd';
+
 // import { response } from 'express';
 
 
@@ -27,6 +28,7 @@ function LandingPage() {
       setCurrentpage([response.page])
       setMovies([...Movies,...response.results])
       setMainMovieImage(response.results[0])
+      
     })
   }
 
@@ -36,7 +38,10 @@ function LandingPage() {
   }
 
     return (
+      
       <div style={{width:'100%', margin:'0'}}>
+
+        
           { /* main image */}
           {MainMovieImage &&   <MainImage 
           image = {`${IMAGE_BASE_URL}w1280${MainMovieImage.backdrop_path}`}

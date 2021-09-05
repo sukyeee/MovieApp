@@ -25,6 +25,7 @@ ReactDOM.render(
             window.__REDUX_DEVTOOLS_EXTENSION__()
         )}
     >
+
         <BrowserRouter>
             <App />
         </BrowserRouter>

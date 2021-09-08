@@ -25,7 +25,7 @@ function MovieDetail(props) {
         fetch(endpointInfo)
         .then(response => response.json())
         .then(response => {
-            // console.log(response)
+            console.log(response)
             setMovie(response)
         })
     }, [])
@@ -46,14 +46,16 @@ function MovieDetail(props) {
             <div style={{width:'85%', margin:'1rem auto'}}>
             <MainImage 
              image = {`${IMAGE_BASE_URL}w1280${Movie.backdrop_path}`}
-             title = {Movie.original_title}
+             title = {Movie.original_title} 
              text = {Movie.overview}
-   
             />
 
             
             {/* Body */}
-            <Favorite movieInfo={Movie} movieId={movieId} userFrom={localStorage.getItem('userId')}></Favorite>
+            {/* <Favorite movieInfo={Movie} movieId={movieId} userFrom={localStorage.getItem('userId')}></Favorite> */}
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <Favorite movieInfo={Movie} movieId={movieId} userFrom={localStorage.getItem('userId')} />
+            </div>
 
             <MovieInfo
              movie={Movie}

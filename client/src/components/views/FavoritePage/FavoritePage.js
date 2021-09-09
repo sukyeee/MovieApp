@@ -10,11 +10,8 @@ function FavoritePage() {
     const [Favorites, setFavorites] = useState([])
 
     useEffect(() => {
-
         fetchFavoredMovie()
-       
     }, [])
-
 
     const fetchFavoredMovie = () => {
         Axios.post('/api/favorite/getFavoredMovie', { userFrom: localStorage.getItem('userId') })
@@ -27,7 +24,6 @@ function FavoritePage() {
                 }
             })
     }
-
 
 
     const onClickDelete = (movieId, userFrom) => {
@@ -50,7 +46,6 @@ function FavoritePage() {
     }
 
 
-   
 
     return (
         <div style={{width:'85%', margin: '3rem auto'}}>

@@ -25,7 +25,7 @@ function App() {
           <Route exact path="/register" component={Auth(RegisterPage, false)} />
           <Route exact path="/movie/:movieId" component={Auth(MovieDetail, null)} />
           <Route exact path="/favorite" component={Auth(FavoritePage, true)} /> 
-          {/* 원래 favorite page는 false아니라 true, 현재 false만 가능 */}
+          
           
         </Switch>
       </div>

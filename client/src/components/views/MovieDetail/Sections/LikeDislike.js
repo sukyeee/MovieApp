@@ -20,16 +20,16 @@ function LikeDislike(props) {
     
     const [like, setLike] = useState(0);
     const [liked, setLiked] = useState(false)
+    
 
     useEffect(() => {
-        
         
          Axios.post('/api/likeDislike/like', variables) //DB서버에 요청 (임의로 정한 위치)
         .then(response => { //요청받은 결과값: response
             console.log('like', response.data)
             if(response.data.success){
-       
                 setLike(response.data.likeNumber)
+                console.log(response.data.info)
             }else alert('like 정보 가져오는데 실패함')
             
         })

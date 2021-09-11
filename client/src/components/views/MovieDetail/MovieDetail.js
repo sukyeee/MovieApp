@@ -6,8 +6,9 @@ import MovieInfo from './Sections/MovieInfo';
 import {Row} from 'antd';
 import GridCards from '../commons/GridCard';
 import Favorite from './Sections/Favorite';
-import { IoMdThumbsUp, IoMdThumbsDown } from "react-icons/io";
-import Axios from 'axios';
+import LikeDislike from './Sections/LikeDislike';
+import Comments from './Sections/Comments';
+// import { response } from 'express';
 
 function MovieDetail(props) {
     let movieId = props.match.params.movieId
@@ -18,13 +19,7 @@ function MovieDetail(props) {
     const [Casts, setCasts] = useState([]);
     const [ToggleCasts, setToggleCasts] = useState(false);
 
-    const [like, setLike] = useState({
-        num:0,
-        state: false,
-        color: 'black'
-    });
-    const [dislike, setDislike] = useState({num:0, state: false, color: 'black'});
-    
+  
     const toggleCastView = () => {
         setToggleCasts(!ToggleCasts);
     }
@@ -49,20 +44,8 @@ function MovieDetail(props) {
        })
     }, [])
 
-    useEffect(() => {
-        
-        Axios.post('/api/likedislike/like')
 
-    }, [])
-
-    const onClicklikeButton = ()=> {
-        if(like.state)  setLike({num:like.num - 1, state:!like.state, color: 'black' });
-        else setLike({num:like.num + 1, state:!like.state , color: 'blue'});
-    }
-    const onClickBadButton = ()=> {
-        if(dislike.state) setDislike({num:dislike.num - 1, state:!dislike.state, color: 'black'});
-        else setDislike({num:dislike.num + 1, state:!dislike.state, color: 'blue'});
-    }
+  
     
 
     return (    
@@ -108,12 +91,15 @@ function MovieDetail(props) {
             <button onClick={toggleCastView}>toggle button</button>
             </div>
 
+            <LikeDislike movieId={movieId} userFrom={localStorage.getItem('userId')} />
+         
+            <div style={{fontSize:'24px', fontWeight:'bold'}}>Share your opinions about {Movie.title}</div>
+            <hr />
+            {/* 댓글 / 답글 */}
 
-            <div style={{display:'flex', justifyContent:'center', margin:'1rem'}}>
-                <button onClick={onClicklikeButton} style={{background:'none', border:'none', color:`${like.color}`}}> <IoMdThumbsUp /></button>  {like.num}
-                <button onClick={onClickBadButton} style={{background:'none', border:'none', marginLeft:'0.5rem', color:`${dislike.color}`}}> <IoMdThumbsDown /></button> {dislike.num}
+            {/* user데이터베이스에서 userId가져오기 */}
+            <Comments userFrom={localStorage.getItem('userId')} movieId={movieId} /> 
             
-            </div>
 
             </div>
         </div>

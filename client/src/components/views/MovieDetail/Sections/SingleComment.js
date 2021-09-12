@@ -1,11 +1,11 @@
-import React from 'react'
+// import React from 'react'
 
-function SingleComment() {
-    return (
-        <div>
+// function SingleComment() {
+//     return (
+//         <div>
             
-        </div>
-    )
-}
+//         </div>
+//     )
+// }
 
-export default SingleComment
+// export default SingleComment

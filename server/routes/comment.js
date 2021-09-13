@@ -9,7 +9,7 @@ router.post('/commentList', (req, res) => {
 
     comment.save((err, doc) => { //save:데이터를 데이터베이스에 저장
         if (err) return res.status(400).send(err)
-        return res.status(200).json({ success: true })
+        return res.status(200).json({ success: true, input: doc })
     })
 })
 module.exports = router;

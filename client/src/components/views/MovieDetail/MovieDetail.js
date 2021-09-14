@@ -6,8 +6,9 @@ import MovieInfo from './Sections/MovieInfo';
 import {Row} from 'antd';
 import GridCards from '../commons/GridCard';
 import Favorite from './Sections/Favorite';
-import LikeDislike from './Sections/LikeDislike';
+import LikeDislikes from './Sections/LikeDislikes';
 import Comments from './Sections/Comments';
+import Axios from 'axios';
 // import { response } from 'express';
 
 function MovieDetail(props) {
@@ -18,12 +19,35 @@ function MovieDetail(props) {
     const [Movie, setMovie] = useState([]);
     const [Casts, setCasts] = useState([]);
     const [ToggleCasts, setToggleCasts] = useState(false);
+    const [CommentLists, setCommentLists] = useState([])
+    const [LoadingForMovie, setLoadingForMovie] = useState(true)
+    const [LoadingForCasts, setLoadingForCasts] = useState(true)
+    const movieVariable = {
+        movieId: movieId
+    }
+    useEffect(() => {
 
-  
+        let endpointForMovieInfo = `${API_URL}movie/${movieId}?api_key=${API_KEY}&language=en-US`;
+        fetchDetailInfo(endpointForMovieInfo)
+
+        Axios.post('/api/comment/getComments', movieVariable)
+            .then(response => {
+                console.log(response)
+                if (response.data.success) {
+                    console.log('response.data.comments', response.data.comments)
+                    setCommentLists(response.data.comments)
+                } else {
+                    alert('Failed to get comments Info')
+                }
+            })
+
+    }, [])
     const toggleCastView = () => {
         setToggleCasts(!ToggleCasts);
     }
-
+    const updateComment = (newComment) => {
+        setCommentLists(CommentLists.concat(newComment))
+    }
     useEffect(() => {
         // console.log(props.match)
         fetch(endpointInfo)
@@ -44,7 +68,28 @@ function MovieDetail(props) {
        })
     }, [])
 
+    const fetchDetailInfo = (endpoint) => {
 
+        fetch(endpoint)
+            .then(result => result.json())
+            .then(result => {
+                console.log(result)
+                setMovie(result)
+                setLoadingForMovie(false)
+
+                let endpointForCasts = `${API_URL}movie/${movieId}/credits?api_key=${API_KEY}`;
+                fetch(endpointForCasts)
+                    .then(result => result.json())
+                    .then(result => {
+                        console.log(result)
+                        setCasts(result.cast)
+                    })
+
+                setLoadingForCasts(false)
+            })
+            .catch(error => console.error('Error:', error)
+            )
+    }
   
     
 
@@ -91,15 +136,14 @@ function MovieDetail(props) {
             <button onClick={toggleCastView}>toggle button</button>
             </div>
 
-            <LikeDislike movieId={movieId} userFrom={localStorage.getItem('userId')} />
+            <LikeDislikes movieId={movieId} userFrom={localStorage.getItem('userId')} />
          
-            <div style={{fontSize:'24px', fontWeight:'bold'}}>Share your opinions about {Movie.title}</div>
-            <hr />
+            {/* <div style={{fontSize:'24px', fontWeight:'bold'}}>Share your opinions about {Movie.title}</div> */}
             {/* 댓글 / 답글 */}
 
             {/* user데이터베이스에서 userId가져오기 */}
-            <Comments userFrom={localStorage.getItem('userId')} movieId={movieId} /> 
-            
+            {/* <Comments userFrom={localStorage.getItem('userId')} movieId={movieId} />  */}
+            <Comments movieTitle={Movie.original_title} CommentLists={CommentLists} postId={movieId} refreshFunction={updateComment} />
 
             </div>
         </div>

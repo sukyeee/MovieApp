@@ -1,55 +1,77 @@
-import TextArea from 'antd/lib/input/TextArea'
-import Axios from 'axios'
-// import { response } from 'express'
 import React, { useState } from 'react'
-import {Button} from 'antd'
-import { FaFileExcel } from 'react-icons/fa'
-
+import { Button, Input, Typography, } from 'antd';
+import axios from 'axios';
+import { useSelector } from 'react-redux';
+import SingleComment from './SingleComment';
+import ReplyComment from './ReplyComment';
+const { TextArea } = Input;
+const { Title } = Typography;
 function Comments(props) {
+    const user = useSelector(state => state.user)
+    const [Comment, setComment] = useState("")
 
-    const [CommentList, setCommentList] = useState(['test1'])
-    const [Input, setInput] = useState(null)
-
-    const variable= {
-       userFrom : props.userFrom,
-       movieId :  props.movieId,
-       Input : Input //댓글 내용
+    const handleChange = (e) => {
+        setComment(e.target.value)
     }
 
-    const onChange = (e) => {
-        setInput(e.target.value)
-        console.log(Input)
-    }
-    const onClickSubmit = () => { //댓글 submit => DB에 댓글 commentList 저장
-        Axios.post('/api/comment/commentList', variable)
-        .then(response => {
-            if(response.data.success){
-                console.log('commentList',  response.data.input)
-                setCommentList([...CommentList, ...response.data.input.Input])
-            }else{
-                alert('comment 내용을 저장하는 데 실패했습니다')
-            }
-        })
-        setInput(' ')
+    const onSubmit = (e) => {
+        e.preventDefault();
+
+        if (user.userData && !user.userData.isAuth) {
+            return alert('Please Log in first');
+        }
+
+        const variables = {
+            content: Comment,
+            writer: user.userData._id,
+            postId: props.postId
+        }
+        console.log(variables)
+
+        axios.post('/api/comment/saveComment', variables)
+            .then(response => {
+                if (response.data.success) {
+                    setComment("")
+                    props.refreshFunction(response.data.result)
+                } else {
+                    alert('Failed to save Comment')
+                }
+            })
     }
 
     return (
         <div>
-            <div class="comment-list" style={{display:'flex', height:'200px'}}>
-            {/* username, comment, ... commentList 뿌리기 */}
-            <div>
-                {CommentList}
-            </div>
+            <br />
+            <Title level={3} > Share your opinions about {props.movieTitle} </Title>
+            <hr />
+            {/* Comment Lists  */}
+            {console.log(props.CommentLists)}
 
-            </div>
+            {props.CommentLists && props.CommentLists.map((comment, index) => (
+                (!comment.responseTo &&
+                    <React.Fragment>
+                        <SingleComment comment={comment} postId={props.postId} refreshFunction={props.refreshFunction} />
+                        <ReplyComment CommentLists={props.CommentLists} postId={props.postId} parentCommentId={comment._id} refreshFunction={props.refreshFunction} />
+                    </React.Fragment>
+                )
+            ))}
 
-            <form style={{display:"flex"} } onSubmit>
-            <TextArea
-            style={{width:'100%', borderRadius:'5px'}}
-            onChange={onChange}
-            value={Input}
-            />
-            <Button onClick={onClickSubmit} style={{width:'300px', height:'50px'}}> Submit </Button>
+            {props.CommentLists && props.CommentLists.length === 0 &&
+                <div style={{ display: 'flex', justifyContent:'center', alignItems:'center', height:'200px'}} >
+                    Be the first one who shares your thought about this movie
+                </div>
+            }
+
+            {/* Root Comment Form */}
+            <form style={{ display: 'flex' }} onSubmit={onSubmit}>
+                <TextArea
+                    style={{ width: '100%', borderRadius: '5px' }}
+                    onChange={handleChange}
+                    value={Comment}
+                    placeholder="write some comments"
+                />
+                <br />
+                <Button style={{ width: '20%', height: '52px' }} onClick={onSubmit}>Submit</Button>
             </form>
 
         </div>

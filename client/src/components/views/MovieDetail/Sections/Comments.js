@@ -1,79 +1,48 @@
+import TextArea from 'antd/lib/input/TextArea'
 import React, { useState } from 'react'
-import { Button, Input, Typography, } from 'antd';
-import axios from 'axios';
-import { useSelector } from 'react-redux';
-import SingleComment from './SingleComment';
-import ReplyComment from './ReplyComment';
-const { TextArea } = Input;
-const { Title } = Typography;
-function Comments(props) {
-    const user = useSelector(state => state.user)
-    const [Comment, setComment] = useState("")
+import { useSelector } from 'react-redux'
+import {Button} from 'antd'
+import Axios from 'axios'
 
-    const handleChange = (e) => {
+// import { response } from 'express'
+function Comments(props) {
+
+    // const user = useSelector(state => state.user)
+    const [Comment, setComment] = useState("")
+    
+    const onChange = (e) => {
         setComment(e.target.value)
     }
 
+    const variable = {
+        content: Comment,
+        writer: props.userFrom,
+        postId: props.postId
+    }
     const onSubmit = (e) => {
-        e.preventDefault();
-
-        if (user.userData && !user.userData.isAuth) {
-            return alert('Please Log in first');
-        }
-
-        const variables = {
-            content: Comment,
-            writer: user.userData._id,
-            postId: props.postId
-        }
-        console.log(variables)
-
-        axios.post('/api/comment/saveComment', variables)
-            .then(response => {
-                if (response.data.success) {
-                    setComment("")
-                    props.refreshFunction(response.data.result)
-                } else {
-                    alert('Failed to save Comment')
-                }
-            })
+        Axios.post('/api/comment/saveComment', variable)
+        .then(response => {
+            if(response.data.success){
+                console.log('saveComment', response.data.result)
+                setComment("")
+              
+            } else {
+                alert('saveComment 에서 데이터를 가져오지 못했습니다')
+            }
+        })
     }
 
     return (
         <div>
-            <br />
-            <Title level={3} > Share your opinions about {props.movieTitle} </Title>
-            <hr />
-            {/* Comment Lists  */}
-            {console.log(props.CommentLists)}
-
-            {props.CommentLists && props.CommentLists.map((comment, index) => (
-                (!comment.responseTo &&
-                    <React.Fragment>
-                        <SingleComment comment={comment} postId={props.postId} refreshFunction={props.refreshFunction} />
-                        <ReplyComment CommentLists={props.CommentLists} postId={props.postId} parentCommentId={comment._id} refreshFunction={props.refreshFunction} />
-                    </React.Fragment>
-                )
-            ))}
-
-            {props.CommentLists && props.CommentLists.length === 0 &&
-                <div style={{ display: 'flex', justifyContent:'center', alignItems:'center', height:'200px'}} >
-                    Be the first one who shares your thought about this movie
-                </div>
-            }
-
-            {/* Root Comment Form */}
-            <form style={{ display: 'flex' }} onSubmit={onSubmit}>
+            <form style={{'display':'flex', 'border-radius':'5px'}} onSubmit = {onSubmit}>
                 <TextArea
-                    style={{ width: '100%', borderRadius: '5px' }}
-                    onChange={handleChange}
-                    value={Comment}
-                    placeholder="write some comments"
-                />
-                <br />
-                <Button style={{ width: '20%', height: '52px' }} onClick={onSubmit}>Submit</Button>
+                onChange={onChange}
+                value={Comment}
+                ></TextArea>
+                <Button onClick={onSubmit} style={{'width':'20%', 'height':'52px'}}
+                
+                >Submit</Button>
             </form>
-
         </div>
     )
 }

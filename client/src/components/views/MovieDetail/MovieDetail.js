@@ -27,8 +27,6 @@ function MovieDetail(props) {
     }
     useEffect(() => {
 
-        let endpointForMovieInfo = `${API_URL}movie/${movieId}?api_key=${API_KEY}&language=en-US`;
-        fetchDetailInfo(endpointForMovieInfo)
 
         Axios.post('/api/comment/getComments', movieVariable)
             .then(response => {
@@ -43,10 +41,10 @@ function MovieDetail(props) {
 
     }, [])
     const toggleCastView = () => {
-        setToggleCasts(!ToggleCasts);
+
     }
     const updateComment = (newComment) => {
-        setCommentLists(CommentLists.concat(newComment))
+
     }
     useEffect(() => {
         // console.log(props.match)
@@ -143,8 +141,7 @@ function MovieDetail(props) {
 
             {/* user데이터베이스에서 userId가져오기 */}
             {/* <Comments userFrom={localStorage.getItem('userId')} movieId={movieId} />  */}
-            <Comments movieTitle={Movie.original_title} CommentLists={CommentLists} postId={movieId} refreshFunction={updateComment} />
-
+            <Comments userFrom = {localStorage.getItem('userId')} postId = {movieId} />
             </div>
         </div>
     )

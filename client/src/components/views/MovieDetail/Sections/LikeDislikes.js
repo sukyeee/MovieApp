@@ -26,17 +26,17 @@ function LikeDislike(props) {
         
          Axios.post('/api/likeDislike/like', variables) //DB서버에 요청 (임의로 정한 위치)
         .then(response => { //요청받은 결과값: response
-            console.log('like', response.data)
+            // console.log('like', response.data)
             if(response.data.success){
                 setLike(response.data.likeNumber)
-                console.log(response.data.info)
+                // console.log(response.data.info)
             }else alert('like 정보 가져오는데 실패함')
             
         })
 
         Axios.post('/api/likeDislike/liked', variables) //DB서버에 요청 (임의로 정한 위치)
         .then(response => { //요청받은 결과값: response
-            console.log('liked',response.data)
+            // console.log('liked',response.data)
         
             if(response.data.success){
                 setLiked(response.data.liked)

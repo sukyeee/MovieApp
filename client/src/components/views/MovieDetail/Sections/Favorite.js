@@ -26,7 +26,7 @@ function Favorite(props) {
 
         Axios.post('/api/favorite/favoriteNumber', variables)
             .then(response => {
-                console.log('favoriteNumber', response);
+                // console.log('favoriteNumber', response)
                 setFavoriteNumber(response.data.favoriteNumber)
                 if (response.data.success) {
                 } else {

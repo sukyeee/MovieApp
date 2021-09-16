@@ -22,29 +22,24 @@ function MovieDetail(props) {
     const [CommentLists, setCommentLists] = useState([])
     const [LoadingForMovie, setLoadingForMovie] = useState(true)
     const [LoadingForCasts, setLoadingForCasts] = useState(true)
-    const movieVariable = {
-        movieId: movieId
+   
+    const variables = {
+        postId: movieId
     }
-    useEffect(() => {
+    Axios.post('/api/comment/getComments', variables)
+    .then(response => {
+        console.log('CommentLists',response.data.comments)
+        if (response.data.success) {
 
+            setCommentLists(response.data.comments)
+        } else {
+            alert('getComments 정보를 가져오는데 실패 했습니다.')
+        }
+    })
+   
 
-        Axios.post('/api/comment/getComments', movieVariable)
-            .then(response => {
-                console.log(response)
-                if (response.data.success) {
-                    console.log('response.data.comments', response.data.comments)
-                    setCommentLists(response.data.comments)
-                } else {
-                    alert('Failed to get comments Info')
-                }
-            })
-
-    }, [])
     const toggleCastView = () => {
-
-    }
-    const updateComment = (newComment) => {
-
+        setToggleCasts(!ToggleCasts)
     }
     useEffect(() => {
         // console.log(props.match)
@@ -67,7 +62,6 @@ function MovieDetail(props) {
     }, [])
 
     const fetchDetailInfo = (endpoint) => {
-
         fetch(endpoint)
             .then(result => result.json())
             .then(result => {
@@ -79,7 +73,7 @@ function MovieDetail(props) {
                 fetch(endpointForCasts)
                     .then(result => result.json())
                     .then(result => {
-                        console.log(result)
+                        console.log('result' , result)
                         setCasts(result.cast)
                     })
 
@@ -140,8 +134,7 @@ function MovieDetail(props) {
             {/* 댓글 / 답글 */}
 
             {/* user데이터베이스에서 userId가져오기 */}
-            {/* <Comments userFrom={localStorage.getItem('userId')} movieId={movieId} />  */}
-            <Comments userFrom = {localStorage.getItem('userId')} postId = {movieId} />
+            <Comments userFrom={localStorage.getItem('userId')} movieId={movieId} /> 
             </div>
         </div>
     )

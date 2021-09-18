@@ -27,8 +27,8 @@ function Comments(props) {
         .then(response => {
             if(response.data.success){
                 console.log('saveComment', response.data.result)
+                props.refreshFunc(response.data.result)
                 setComment("")
-                props.refreshFunction(response.data.result)
               
             } else {
                 alert('saveComment 에서 데이터를 가져오지 못했습니다')
@@ -38,10 +38,17 @@ function Comments(props) {
 
     return (
         <div>
-        <SingleComment postId={props.postId}  />
-                
-            
-            
+            {console.log('props.commentLists', props.commentLists)}
+                {/* { props.commentLists.map((comment, index)=> (
+                    <React.Fragment>
+                     <SingleComment 
+                     refreshFunc={props.refreshFunc}
+                     comment = {comment}
+                     />
+                     </React.Fragment>
+           
+                ))
+                } */}
 
             <form style={{'display':'flex', 'border-radius':'5px'}} onSubmit = {onSubmit}>
                 <Input

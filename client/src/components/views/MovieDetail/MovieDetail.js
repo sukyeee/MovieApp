@@ -23,20 +23,26 @@ function MovieDetail(props) {
     const [LoadingForMovie, setLoadingForMovie] = useState(true)
     const [LoadingForCasts, setLoadingForCasts] = useState(true)
    
-    const variables = {
-        postId: movieId
+    const refreshFunc = (newComment) => {
+        setCommentLists(CommentLists.concat(newComment))
     }
-    Axios.post('/api/comment/getComments', variables)
-    .then(response => {
-        console.log('CommentLists',response.data.comments)
-        if (response.data.success) {
-
-            setCommentLists(response.data.comments)
-        } else {
-            alert('getComments 정보를 가져오는데 실패 했습니다.')
+    useEffect(() => {
+        const variable = {
+            movieId
         }
-    })
-   
+        
+        Axios.post('/api/comment/getComments', variable)
+        .then(response => {
+            if(response.data.success){
+                console.log('getComments', response.data.result)
+                setCommentLists(response.data.result)
+            } else {
+                alert('getComments를 가져오지 못했습니다')
+            }
+        } )
+
+    }, [])
+
 
     const toggleCastView = () => {
         setToggleCasts(!ToggleCasts)
@@ -134,7 +140,7 @@ function MovieDetail(props) {
             {/* 댓글 / 답글 */}
 
             {/* user데이터베이스에서 userId가져오기 */}
-            <Comments userFrom={localStorage.getItem('userId')} movieId={movieId} /> 
+            <Comments userFrom={localStorage.getItem('userId')} movieId={movieId} CommentLists={CommentLists} refreshFunc={refreshFunc}/> 
             </div>
         </div>
     )

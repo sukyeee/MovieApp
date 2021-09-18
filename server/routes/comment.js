@@ -25,12 +25,13 @@ router.post("/saveComment", auth, (req, res) => {
 
 router.post("/getComments", (req, res) => {
 
-    Comment.find({ "postId": req.body.movieId })
-        .populate('writer')
-        .exec((err, comments) => {
-            if (err) return res.status(400).send(err)
-            res.status(200).json({ success: true, comments })
-        })
+    Comment.find({'postId' : req.body.movieId})
+    .populate('writer')
+    .exec((err, result) => {
+        if(err) return res.json({ success: false, err })
+        return res.status(200).json({ success: true, result })
+    })
+   
 });
 // myFirstDatabase.comments.remove({"movieId":"848278"})
 

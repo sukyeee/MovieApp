@@ -27,9 +27,9 @@ router.post("/getComments", (req, res) => {
 
     Comment.find({'postId' : req.body.movieId})
     .populate('writer')
-    .exec((err, result) => {
+    .exec((err, comments) => {
         if(err) return res.json({ success: false, err })
-        return res.status(200).json({ success: true, result })
+        return res.status(200).json({ success: true, comments })
     })
    
 });

@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
-import {Avatar, Button, Input, Typography, } from 'antd'
+import {Button, Input, Typography, } from 'antd'
 import Axios from 'axios'
 import SingleComment from './SingleComment'
-
+import ReplyComment from './ReplyComment'
 // import { response } from 'express'
 function Comments(props) {
 
@@ -27,7 +27,7 @@ function Comments(props) {
         .then(response => {
             if(response.data.success){
                 console.log('saveComment', response.data.result)
-                props.refreshFunc(response.data.result)
+                props.refreshFunction(response.data.result)
                 setComment("")
               
             } else {
@@ -38,19 +38,19 @@ function Comments(props) {
 
     return (
         <div>
-            {console.log('props.commentLists', props.commentLists)}
-                {/* { props.commentLists.map((comment, index)=> (
-                    <React.Fragment>
-                     <SingleComment 
-                     refreshFunc={props.refreshFunc}
-                     comment = {comment}
-                     />
+            {console.log('comments-props.commentLists', props.CommentLists)}
+                { props.CommentLists && props.CommentLists.map((comment, index)=> (
+                     (!comment.responseTo &&
+                    <React.Fragment>                        
+                     <SingleComment refreshFunction={props.refreshFunction} comment = {comment} postId = {props.postId}  />
+                     <ReplyComment CommentLists={props.CommentLists} parentCommentId={comment._id} postId={props.postId} refreshFunction={props.refreshFunction} />
                      </React.Fragment>
-           
-                ))
-                } */}
 
-            <form style={{'display':'flex', 'border-radius':'5px'}} onSubmit = {onSubmit}>
+                     )
+                ))
+                }
+
+            <form style={{'display':'flex', 'borderRadius':'5px'}} onSubmit = {onSubmit}>
                 <Input
                 onChange={onChange}
                 value={Comment}

@@ -4,6 +4,8 @@ import {API_URL, API_KEY, IMAGE_BASE_URL} from '../../Config';
 import MainImage from './Sections/MainImage';
 import GridCards from '../commons/GridCard';
 import {Row} from 'antd';
+import { Menu, Input } from 'antd';
+const { Search } = Input;
 
 // import { response } from 'express';
 
@@ -13,6 +15,7 @@ function LandingPage() {
   const [Movies, setMovies] = useState([]);
   const [MainMovieImage, setMainMovieImage] = useState(null);
   const [Currentpage, setCurrentpage] = useState(0);
+  const [SearchValue, setSearchValue] = useState(null)
 
   useEffect(() => {
     const endpoint = `${API_URL}movie/popular?api_key=${API_KEY}&language=en-US&page=1`;
@@ -20,7 +23,6 @@ function LandingPage() {
   }, []);
 
   const fetchMovies = (endpoint) => {
-
     fetch(endpoint)
     .then(response => response.json())
     .then(response => {
@@ -37,11 +39,23 @@ function LandingPage() {
     fetchMovies(endpoint);
   }
 
+  const onSearch = value => {
+    console.log(value)
+    setSearchValue(value)
+    const endpoint = `${API_URL}search/movie?api_key=${API_KEY}&query=${value}`;
+    fetch(endpoint)
+    .then(response => response.json())
+    .then(response => {
+      console.log('searchpage' ,[response.results][0])
+      setMovies([response.results][0])        
+    })
+  }
+
+
     return (
       
       <div style={{width:'100%', margin:'0'}}>
-
-        
+          <Search placeholder="input search text"  onSearch={onSearch} style={{ 'width': '200px' }} />
           { /* main image */}
           {MainMovieImage &&   <MainImage 
           image = {`${IMAGE_BASE_URL}w1280${MainMovieImage.backdrop_path}`}
@@ -73,7 +87,7 @@ function LandingPage() {
           </div>
 
         <div style={{ display: 'flex', justifyContent: 'center'}}>
-            <button onClick={loadmoreItems} > Load More </button>
+            <button onClick={SearchValue == null ? loadmoreItems : "" } > Load More </button>
         </div>
 
 

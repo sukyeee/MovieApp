@@ -136,7 +136,7 @@ function MovieDetail(props) {
             <button onClick={toggleCastView}>toggle button</button>
             </div>
 
-            <LikeDislikes movieId={movieId} userFrom={localStorage.getItem('userId')} />
+            <LikeDislikes postId={movieId} userFrom={localStorage.getItem('userId')}  />
          
             {/* <div style={{fontSize:'24px', fontWeight:'bold'}}>Share your opinions about {Movie.title}</div> */}
             {/* 댓글 / 답글 */}

@@ -5,9 +5,10 @@ import { Icon, Tooltip } from 'antd';
 
 function LikeDislike(props) {
 
+    
     const userFrom = props.userFrom
     const commentId = props.commentId
-    const postId = props.comment
+    const postId = props.postId
 
     let variables = {
         userFrom, //현재 유저정보와 어떤 movie를 좋아요 했는지 정보를 같이 서버에 보내줌
@@ -25,7 +26,7 @@ function LikeDislike(props) {
         
          Axios.post('/api/likeDislike/likeNumber', variables) //DB서버에 요청 (임의로 정한 위치)
         .then(response => { //요청받은 결과값: response
-            // console.log('likeNumber', response.data)
+            console.log('likeNumber', response.data)
             if(response.data.success){
                 setLikeNumber(response.data.likeNumber)
                 // console.log(response.data.info)

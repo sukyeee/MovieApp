@@ -3,6 +3,7 @@ import LeftMenu from './Sections/LeftMenu';
 import RightMenu from './Sections/RightMenu';
 import { Drawer, Button, Icon } from 'antd';
 import './Sections/Navbar.css';
+import { Menu } from 'antd';
 
 function NavBar() {
   const [visible, setVisible] = useState(false)
@@ -27,6 +28,7 @@ function NavBar() {
         <div className="menu_rigth">
           <RightMenu mode="horizontal" />
         </div>
+        
         <Button
           className="menu__mobile-button"
           type="primary"
@@ -35,7 +37,7 @@ function NavBar() {
           <Icon type="align-right" />
         </Button>
         <Drawer
-          title="Basic Drawer"
+          title="Basic Drawer" 
           placement="right"
           className="menu_drawer"
           closable={false}
